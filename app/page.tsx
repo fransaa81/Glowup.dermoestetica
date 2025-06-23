@@ -19,6 +19,9 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 // Importar las fuentes de Google Fonts
 import { Libre_Baskerville, Raleway } from "next/font/google"
 
+// Importar el componente MobileMenu
+import { MobileMenu } from "./components/mobile-menu"
+
 // Configurar las fuentes
 const libreBaskerville = Libre_Baskerville({ subsets: ["latin"], weight: ["700"] })
 const raleway = Raleway({ subsets: ["latin"], weight: ["400"] })
@@ -181,6 +184,7 @@ export default function Home() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#3d0d04] transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </nav>
+          <MobileMenu scrolled={scrolled} />
         </div>
       </header>
 
@@ -196,7 +200,7 @@ export default function Home() {
 
           {/* PARCHE ÚNICO PARA LA MANCHA - Ajustado a la posición correcta y tamaño reducido */}
           <div
-            className="absolute z-30"
+            className="absolute z-30 hidden md:block"
             style={{
               right: "28%",
               top: "45%",
@@ -213,7 +217,7 @@ export default function Home() {
               {/* Contenedor para la imagen y el texto con posición relativa */}
               <div className="relative flex justify-center items-center flex-col gap-2 mb-2">
                 {/* Contenedor específico para la imagen con overflow hidden para evitar que se salga cualquier parte de la imagen */}
-                <div className="relative w-[455px] h-[455px] flex items-center justify-center overflow-hidden animate-fade-in">
+                <div className="relative w-[280px] h-[280px] md:w-[455px] md:h-[455px] flex items-center justify-center overflow-hidden animate-fade-in">
                   <Image
                     src="/images/ojo-glow-up.png"
                     alt="Glow up Eye Logo"
@@ -226,21 +230,21 @@ export default function Home() {
 
                 {/* Texto del logo con animación */}
                 <div
-                  className={`text-6xl text-[#3d0d04] font-bold tracking-wider ${libreBaskerville.className} animate-fade-in-up`}
+                  className={`text-4xl md:text-6xl text-[#3d0d04] font-bold tracking-wider ${libreBaskerville.className} animate-fade-in-up`}
                 >
                   Glow up
                 </div>
                 <div
-                  className={`text-2xl text-[#3d0d04] font-bold mb-6 tracking-wider ${raleway.className} animate-fade-in-up animation-delay-100`}
+                  className={`text-xl md:text-2xl text-[#3d0d04] font-bold mb-4 md:mb-6 tracking-wider ${raleway.className} animate-fade-in-up animation-delay-100`}
                 >
                   Estética Cosmiátrica
                 </div>
-                <h1 className="font-['Great_Vibes',cursive] text-6xl md:text-7xl lg:text-8xl font-normal text-[#3d0d04] leading-tight animate-fade-in-up animation-delay-200">
+                <h1 className="font-['Great_Vibes',cursive] text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal text-[#3d0d04] leading-tight animate-fade-in-up animation-delay-200">
                   Descubre tu Belleza Natural
                 </h1>
               </div>
 
-              <p className="text-lg text-gray-600 max-w-xl mx-auto animate-fade-in-up animation-delay-300">
+              <p className="text-base md:text-lg text-gray-600 max-w-xl mx-auto animate-fade-in-up animation-delay-300 px-4 md:px-0">
                 Estudio cosmiátrico especializado en tratamientos personalizados para realzar tu belleza natural y
                 cuidar tu piel.
               </p>
@@ -259,7 +263,7 @@ export default function Home() {
         </section>
 
         {/* About Section - Movida aquí */}
-        <section id="nosotros" className="py-20 relative">
+        <section id="nosotros" className="py-16 md:py-20 relative">
           {/* Imagen de fondo con transparencia y overlay mejorado */}
           <div className="absolute inset-0 w-full h-full">
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-white/70"></div>
@@ -273,13 +277,13 @@ export default function Home() {
 
           {/* Contenido superpuesto */}
           <div className="container relative z-10">
-            <div className="max-w-2xl">
-              <div className="w-20 h-1 bg-[#d4a373] mb-6"></div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#2d0a02] mb-4 relative">
+            <div className="max-w-2xl mx-auto md:mx-8 px-6 md:px-8">
+              <div className="w-20 h-1 bg-[#d4a373] mb-6 mx-auto md:mx-0"></div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#2d0a02] mb-4 relative text-center md:text-left">
                 Expertos en belleza y cuidado de la piel
-                <span className="absolute -bottom-3 left-0 w-16 h-1 bg-[#ccd5ae]"></span>
+                <span className="absolute -bottom-3 left-0 right-0 md:right-auto mx-auto md:mx-0 w-16 h-1 bg-[#ccd5ae]"></span>
               </h2>
-              <p className="text-lg text-gray-800 mt-8 mb-8">
+              <p className="text-base md:text-lg text-gray-800 mt-8 mb-8 text-center md:text-left">
                 En Glow up, nos dedicamos a realzar tu belleza natural a través de tratamientos personalizados y de alta
                 calidad.
               </p>
@@ -320,7 +324,7 @@ export default function Home() {
               </div>
 
               {/* Badge de estrellas mejorado */}
-              <div className="absolute bottom-4 right-4 w-36 h-20 bg-white rounded-lg shadow-lg flex items-center justify-center p-3 z-20 transform rotate-3 hover:rotate-0 transition-all duration-300">
+              <div className="hidden md:block absolute bottom-4 right-4 w-36 h-20 bg-white rounded-lg shadow-lg flex items-center justify-center p-3 z-20 transform rotate-3 hover:rotate-0 transition-all duration-300">
                 <div className="text-center">
                   <div className="flex justify-center">
                     <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
@@ -337,48 +341,50 @@ export default function Home() {
         </section>
 
         {/* Sección con los cuatro elementos */}
-        <div className="container mt-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-10 px-8 bg-white rounded-xl shadow-lg">
+        <div className="container mt-16 px-4 md:px-0">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 py-8 md:py-10 px-4 md:px-8 bg-white rounded-xl shadow-lg">
             <div className="flex flex-col items-center text-center group">
-              <div className="w-16 h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#d4a373]">
-                <Sparkles className="h-7 w-7 text-[#3d0d04]" />
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#d4a373]">
+                <Sparkles className="h-6 w-6 md:h-7 md:w-7 text-[#3d0d04]" />
               </div>
-              <h3 className="font-medium">Productos Premium</h3>
+              <h3 className="font-medium text-sm md:text-base">Productos Premium</h3>
             </div>
             <div className="flex flex-col items-center text-center group">
-              <div className="w-16 h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#ccd5ae]">
-                <Heart className="h-7 w-7 text-[#3d0d04]" />
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#ccd5ae]">
+                <Heart className="h-6 w-6 md:h-7 md:w-7 text-[#3d0d04]" />
               </div>
-              <h3 className="font-medium">Atención Personalizada</h3>
+              <h3 className="font-medium text-sm md:text-base">Atención Personalizada</h3>
             </div>
             <div className="flex flex-col items-center text-center group">
-              <div className="w-16 h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#e9edc9]">
-                <Star className="h-7 w-7 text-[#3d0d04]" />
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#e9edc9]">
+                <Star className="h-6 w-6 md:h-7 md:w-7 text-[#3d0d04]" />
               </div>
-              <h3 className="font-medium">Profesional Certificada</h3>
+              <h3 className="font-medium text-sm md:text-base">Profesional Certificada</h3>
             </div>
             <div className="flex flex-col items-center text-center group">
-              <div className="w-16 h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#f0d0b0]">
-                <Clock className="h-7 w-7 text-[#3d0d04]" />
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center mb-3 transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#f0d0b0]">
+                <Clock className="h-6 w-6 md:h-7 md:w-7 text-[#3d0d04]" />
               </div>
-              <h3 className="font-medium">Horarios Flexibles</h3>
+              <h3 className="font-medium text-sm md:text-base">Horarios Flexibles</h3>
             </div>
           </div>
         </div>
 
         {/* Services Section */}
-        <section id="servicios" className="py-8 pt-24 bg-white">
-          <div className="container">
+        <section id="servicios" className="py-8 pt-16 md:pt-24 bg-white">
+          <div className="container px-6 md:px-8">
             <div className="text-center max-w-2xl mx-auto mb-8">
               <div className="w-20 h-1 bg-[#d4a373] mx-auto mb-6"></div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#3d0d04] mb-4">Tratamientos Especializados</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#3d0d04] mb-4">
+                Tratamientos Especializados
+              </h2>
               <p className="text-gray-600">
                 Ofrecemos una amplia gama de tratamientos diseñados para realzar tu belleza natural y cuidar tu piel con
                 los mejores productos.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-auto w-full max-w-xs md:max-w-none px-4 md:px-0">
               {/* Limpieza Facial */}
               <Card className="border-none rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 group overflow-hidden flex flex-col transform hover:-translate-y-2">
                 <div className="overflow-hidden">
@@ -387,20 +393,20 @@ export default function Home() {
                     alt="Limpieza Facial"
                     width={400}
                     height={200}
-                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <CardContent className="p-6 flex flex-col flex-1 relative z-10">
+                <CardContent className="p-5 md:p-6 flex flex-col flex-1 relative z-10">
                   <div className="flex-1">
-                    <div className="w-12 h-1 bg-[#d4a373] mb-4 transition-all duration-300 group-hover:w-20"></div>
-                    <h3 className="text-2xl font-semibold text-[#3d0d04] mb-3">Limpieza Facial</h3>
-                    <p className="text-gray-600">
+                    <div className="w-12 h-1 bg-[#d4a373] mb-3 md:mb-4 transition-all duration-300 group-hover:w-20"></div>
+                    <h3 className="text-xl md:text-2xl font-semibold text-[#3d0d04] mb-2 md:mb-3">Limpieza Facial</h3>
+                    <p className="text-gray-600 text-sm md:text-base">
                       Tratamiento profundo para eliminar impurezas y revitalizar la piel de tu rostro, dejándola
                       radiante y saludable.
                     </p>
                   </div>
-                  <div className="mt-4">
+                  <div className="mt-3 md:mt-4">
                     <Button
                       variant="ghost"
                       className="text-[#3d0d04] p-0 hover:bg-transparent hover:text-[#450f05] group"
@@ -421,20 +427,22 @@ export default function Home() {
                     alt="Tratamientos Anti-edad"
                     width={400}
                     height={200}
-                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <CardContent className="p-6 flex flex-col flex-1 relative z-10">
+                <CardContent className="p-5 md:p-6 flex flex-col flex-1 relative z-10">
                   <div className="flex-1">
-                    <div className="w-12 h-1 bg-[#ccd5ae] mb-4 transition-all duration-300 group-hover:w-20"></div>
-                    <h3 className="text-2xl font-semibold text-[#3d0d04] mb-3">Tratamientos Anti-edad</h3>
-                    <p className="text-gray-600">
+                    <div className="w-12 h-1 bg-[#ccd5ae] mb-3 md:mb-4 transition-all duration-300 group-hover:w-20"></div>
+                    <h3 className="text-xl md:text-2xl font-semibold text-[#3d0d04] mb-2 md:mb-3">
+                      Tratamientos Anti-edad
+                    </h3>
+                    <p className="text-gray-600 text-sm md:text-base">
                       Técnicas avanzadas para reducir líneas de expresión y mejorar la elasticidad, rejuveneciendo tu
                       piel.
                     </p>
                   </div>
-                  <div className="mt-4">
+                  <div className="mt-3 md:mt-4">
                     <Button
                       variant="ghost"
                       className="text-[#3d0d04] p-0 hover:bg-transparent hover:text-[#450f05] group"
@@ -455,20 +463,22 @@ export default function Home() {
                     alt="Hidratación Profunda"
                     width={400}
                     height={200}
-                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <CardContent className="p-6 flex flex-col flex-1 relative z-10">
+                <CardContent className="p-5 md:p-6 flex flex-col flex-1 relative z-10">
                   <div className="flex-1">
-                    <div className="w-12 h-1 bg-[#e9edc9] mb-4 transition-all duration-300 group-hover:w-20"></div>
-                    <h3 className="text-2xl font-semibold text-[#3d0d04] mb-3">Hidratación Profunda</h3>
-                    <p className="text-gray-600">
+                    <div className="w-12 h-1 bg-[#e9edc9] mb-3 md:mb-4 transition-all duration-300 group-hover:w-20"></div>
+                    <h3 className="text-xl md:text-2xl font-semibold text-[#3d0d04] mb-2 md:mb-3">
+                      Hidratación Profunda
+                    </h3>
+                    <p className="text-gray-600 text-sm md:text-base">
                       Recupera la hidratación natural de tu piel con nuestros tratamientos especializados para todo tipo
                       de piel.
                     </p>
                   </div>
-                  <div className="mt-4">
+                  <div className="mt-3 md:mt-4">
                     <Button
                       variant="ghost"
                       className="text-[#3d0d04] p-0 hover:bg-transparent hover:text-[#450f05] group"
@@ -485,23 +495,23 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contacto" className="py-20 bg-gradient-to-tr from-[#f9e5d0]/50 to-white">
-          <div className="container">
-            <div className="text-center mb-12">
+        <section id="contacto" className="py-16 md:py-20 bg-gradient-to-tr from-[#f9e5d0]/50 to-white">
+          <div className="container px-4 md:px-0">
+            <div className="text-center mb-10 md:mb-12">
               <div className="w-20 h-1 bg-[#d4a373] mx-auto mb-6"></div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#3d0d04] mb-4">Contacto</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#3d0d04] mb-4">Contacto</h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
                 Estamos aquí para responder tus preguntas y ayudarte a reservar tu próximo tratamiento.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-10 md:mb-12">
               <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm overflow-hidden group">
                 <CardContent className="p-6 flex flex-col items-center text-center space-y-4">
                   <div className="w-16 h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#d4a373]">
                     <Phone className="h-7 w-7 text-[#3d0d04]" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-[#3d0d04]">Contacto</h3>
+                  <h3 className="text-xl md:text-2xl font-semibold text-[#3d0d04]">Contacto</h3>
                   <p className="text-gray-600">Escribenos por consultas y te responderemos a la brevedad.</p>
                   <Button
                     variant="outline"
@@ -518,7 +528,7 @@ export default function Home() {
                   <div className="w-16 h-16 rounded-full bg-[#f9e5d0] flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#ccd5ae]">
                     <MapPin className="h-7 w-7 text-[#3d0d04]" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-[#3d0d04]">Dirección</h3>
+                  <h3 className="text-xl md:text-2xl font-semibold text-[#3d0d04]">Dirección</h3>
                   <p className="text-gray-600">Visítanos en nuestra ubicación en San Miguel, Buenos Aires.</p>
                   <Button
                     variant="outline"
@@ -533,8 +543,8 @@ export default function Home() {
 
             {/* Eliminado el recuadro blanco de fondo */}
             <div className="flex justify-center">
-              <div className="bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-lg w-full max-w-2xl">
-                <h3 className="text-2xl font-semibold text-[#3d0d04] mb-6 text-center">Reserva tu turno</h3>
+              <div className="bg-white/80 backdrop-blur-sm p-4 md:p-8 rounded-xl shadow-lg w-full max-w-2xl">
+                <h3 className="text-xl md:text-2xl font-semibold text-[#3d0d04] mb-6 text-center">Reserva tu turno</h3>
                 <TurnosCalendario />
               </div>
             </div>
@@ -544,19 +554,19 @@ export default function Home() {
 
       {/* Diálogos para los servicios */}
       <Dialog open={limpiezaDialogOpen} onOpenChange={setLimpiezaDialogOpen}>
-        <DialogContent className="sm:max-w-3xl p-0 overflow-hidden border-none max-h-[90vh] flex flex-col">
+        <DialogContent className="sm:max-w-3xl p-0 overflow-hidden border-none max-h-[90vh] flex flex-col w-[95vw] md:w-auto">
           <div className="flex flex-col md:flex-row h-full overflow-auto">
             {/* Imagen de fondo a la izquierda */}
-            <div className="relative h-64 md:h-auto md:w-2/5 flex-shrink-0">
+            <div className="relative h-48 md:h-auto md:w-2/5 flex-shrink-0">
               <Image src="/images/limpieza-facial.jpeg" alt="Limpieza Facial" fill className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             </div>
 
             {/* Contenido a la derecha */}
-            <div className="p-6 md:w-3/5 overflow-y-auto">
+            <div className="p-4 md:p-6 md:w-3/5 overflow-y-auto">
               <DialogHeader className="pb-2">
                 <div className="w-12 h-1 bg-[#d4a373] mb-4"></div>
-                <DialogTitle className="text-2xl font-semibold text-[#3d0d04]">Limpieza Facial</DialogTitle>
+                <DialogTitle className="text-xl md:text-2xl font-semibold text-[#3d0d04]">Limpieza Facial</DialogTitle>
                 <DialogDescription className="text-gray-500">
                   Tratamiento revitalizante para todo tipo de piel
                 </DialogDescription>
@@ -605,10 +615,10 @@ export default function Home() {
       </Dialog>
 
       <Dialog open={antiedadDialogOpen} onOpenChange={setAntiedadDialogOpen}>
-        <DialogContent className="sm:max-w-3xl p-0 overflow-hidden border-none max-h-[90vh] flex flex-col">
+        <DialogContent className="sm:max-w-3xl p-0 overflow-hidden border-none max-h-[90vh] flex flex-col w-[95vw] md:w-auto">
           <div className="flex flex-col md:flex-row h-full overflow-auto">
             {/* Imagen de fondo a la izquierda */}
-            <div className="relative h-64 md:h-auto md:w-2/5 flex-shrink-0">
+            <div className="relative h-48 md:h-auto md:w-2/5 flex-shrink-0">
               <Image
                 src="/images/tratamiento-antiedad.jpeg"
                 alt="Tratamientos Anti-edad"
@@ -619,10 +629,12 @@ export default function Home() {
             </div>
 
             {/* Contenido a la derecha */}
-            <div className="p-6 md:w-3/5 overflow-y-auto">
+            <div className="p-4 md:p-6 md:w-3/5 overflow-y-auto">
               <DialogHeader className="pb-2">
                 <div className="w-12 h-1 bg-[#ccd5ae] mb-4"></div>
-                <DialogTitle className="text-2xl font-semibold text-[#3d0d04]">Tratamientos Anti-edad</DialogTitle>
+                <DialogTitle className="text-xl md:text-2xl font-semibold text-[#3d0d04]">
+                  Tratamientos Anti-edad
+                </DialogTitle>
                 <DialogDescription className="text-gray-500">Rejuvenecimiento y firmeza para tu piel</DialogDescription>
               </DialogHeader>
 
@@ -669,19 +681,21 @@ export default function Home() {
       </Dialog>
 
       <Dialog open={hidratacionDialogOpen} onOpenChange={setHidratacionDialogOpen}>
-        <DialogContent className="sm:max-w-3xl p-0 overflow-hidden border-none max-h-[90vh] flex flex-col">
+        <DialogContent className="sm:max-w-3xl p-0 overflow-hidden border-none max-h-[90vh] flex flex-col w-[95vw] md:w-auto">
           <div className="flex flex-col md:flex-row h-full overflow-auto">
             {/* Imagen de fondo a la izquierda */}
-            <div className="relative h-64 md:h-auto md:w-2/5 flex-shrink-0">
+            <div className="relative h-48 md:h-auto md:w-2/5 flex-shrink-0">
               <Image src="/images/limpieza-facial.jpeg" alt="Hidratación Profunda" fill className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             </div>
 
             {/* Contenido a la derecha */}
-            <div className="p-6 md:w-3/5 overflow-y-auto">
+            <div className="p-4 md:p-6 md:w-3/5 overflow-y-auto">
               <DialogHeader className="pb-2">
                 <div className="w-12 h-1 bg-[#e9edc9] mb-4"></div>
-                <DialogTitle className="text-2xl font-semibold text-[#3d0d04]">Hidratación Profunda</DialogTitle>
+                <DialogTitle className="text-xl md:text-2xl font-semibold text-[#3d0d04]">
+                  Hidratación Profunda
+                </DialogTitle>
                 <DialogDescription className="text-gray-500">
                   Restaura el equilibrio natural de tu piel
                 </DialogDescription>
@@ -731,9 +745,9 @@ export default function Home() {
 
       {/* Diálogo para el formulario de contacto */}
       <Dialog open={contactFormOpen} onOpenChange={setContactFormOpen}>
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto w-[95vw] md:w-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold text-[#3d0d04]">Contáctanos</DialogTitle>
+            <DialogTitle className="text-xl md:text-2xl font-semibold text-[#3d0d04]">Contáctanos</DialogTitle>
             <DialogDescription>
               Completa el formulario y nos pondremos en contacto contigo a la brevedad.
             </DialogDescription>
@@ -747,6 +761,7 @@ export default function Home() {
                 required
                 value={contactForm.name}
                 onChange={handleContactFormChange}
+                className="h-10 md:h-auto"
               />
             </div>
             <div className="space-y-2">
@@ -758,6 +773,7 @@ export default function Home() {
                 required
                 value={contactForm.email}
                 onChange={handleContactFormChange}
+                className="h-10 md:h-auto"
               />
             </div>
             <div className="space-y-2">
@@ -768,6 +784,7 @@ export default function Home() {
                 placeholder="Tu número de celular"
                 value={contactForm.phone}
                 onChange={handleContactFormChange}
+                className="h-10 md:h-auto"
               />
             </div>
             <div className="space-y-2">
@@ -795,14 +812,14 @@ export default function Home() {
 
       {/* Diálogo para el mapa */}
       <Dialog open={mapDialogOpen} onOpenChange={setMapDialogOpen}>
-        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto w-[95vw] md:w-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold text-[#3d0d04]">Nuestra Ubicación</DialogTitle>
+            <DialogTitle className="text-xl md:text-2xl font-semibold text-[#3d0d04]">Nuestra Ubicación</DialogTitle>
             <DialogDescription>
               Angel D' Elía entre Pringles y Güemes, San Miguel, provincia de Buenos Aires
             </DialogDescription>
           </DialogHeader>
-          <div className="w-full h-[400px] mt-4 rounded-md overflow-hidden">
+          <div className="w-full h-[300px] md:h-[400px] mt-4 rounded-md overflow-hidden">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d821.0988566535096!2d-58.71756397078046!3d-34.54432499483096!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcbd0d3d6e053f%3A0x8f7d458af82b7d10!2sAngel%20D&#39;%20El%C3%ADa%20%26%20Pringles%2C%20San%20Miguel%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1714936118093!5m2!1ses-419!2sar"
               width="100%"
@@ -818,16 +835,16 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      <footer className="py-4 bg-gradient-to-r from-[#571306] to-[#6a1807] text-white relative shadow-[0_-5px_15px_rgba(0,0,0,0.1)]">
+      <footer className="py-6 bg-gradient-to-r from-[#571306] to-[#6a1807] text-white relative shadow-[0_-5px_15px_rgba(0,0,0,0.1)]">
         {/* Línea decorativa superior */}
         <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[#d4a373]/80 via-[#f9e5d0]/60 to-[#d4a373]/80"></div>
 
         {/* Sombra interna superior */}
         <div className="absolute top-0 left-0 w-full h-[8px] bg-gradient-to-b from-black/20 to-transparent"></div>
 
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-            <div className="flex items-center gap-2">
+        <div className="container px-6 md:px-8 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            <div className="flex items-center justify-center md:justify-start gap-2">
               <Link
                 href="/login"
                 className="relative flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
@@ -851,9 +868,9 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="flex flex-col justify-center">
-              <h4 className="text-sm font-semibold mb-2 text-white/90">Contacto</h4>
-              <ul className="space-y-1">
+            <div className="flex flex-col justify-center items-center md:items-start">
+              <h4 className="text-sm font-semibold mb-3 text-white/90">Contacto</h4>
+              <ul className="space-y-2">
                 <li
                   className="flex items-center gap-2 text-xs text-white/70 cursor-pointer hover:text-white transition-colors"
                   onClick={() => setContactFormOpen(true)}
@@ -868,12 +885,12 @@ export default function Home() {
               </ul>
             </div>
 
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-center md:justify-end">
               <a
                 href="https://www.instagram.com/glowestetica.ba/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+                className="flex items-center gap-2 text-white/70 hover:text-white transition-colors px-4"
               >
                 <Instagram className="h-5 w-5" />
                 <span className="text-xs">@glowestetica.ba</span>
@@ -881,9 +898,9 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-white/20 pt-3">
+          <div className="border-t border-white/20 pt-4 mt-2">
             <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-xs text-white/60">
+              <div className="text-xs text-white/60 text-center md:text-left px-4 md:px-0">
                 © {new Date().getFullYear()} <span className={libreBaskerville.className}>Glow up</span>. Todos los
                 derechos reservados.
               </div>

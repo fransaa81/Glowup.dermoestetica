@@ -26,9 +26,11 @@ const greatVibes = Great_Vibes({
   variable: "--font-great-vibes",
 })
 
+// Asegurarnos de que el meta viewport esté correctamente configurado
 export const metadata: Metadata = {
   title: "Glow Up - Estética Cosmiátrica",
   description: "Estudio cosmiátrico especializado en tratamientos personalizados para realzar tu belleza natural.",
+  viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
     generator: 'v0.dev'
 }
 

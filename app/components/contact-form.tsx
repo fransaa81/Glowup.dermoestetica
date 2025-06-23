@@ -105,7 +105,7 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
           onChange={handleChange}
           placeholder="Ingresa tu nombre y apellido"
           required
-          className="border-[#f0d0b0] focus:border-[#d4a373] focus:ring-[#d4a373]/20"
+          className="border-[#f0d0b0] focus:border-[#d4a373] focus:ring-[#d4a373]/20 h-10 md:h-auto"
         />
       </div>
 
@@ -121,7 +121,7 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
           onChange={handleChange}
           placeholder="tu@email.com"
           required
-          className="border-[#f0d0b0] focus:border-[#d4a373] focus:ring-[#d4a373]/20"
+          className="border-[#f0d0b0] focus:border-[#d4a373] focus:ring-[#d4a373]/20 h-10 md:h-auto"
         />
       </div>
 
@@ -136,7 +136,7 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
           value={formData.phone}
           onChange={handleChange}
           placeholder="Tu número de teléfono"
-          className="border-[#f0d0b0] focus:border-[#d4a373] focus:ring-[#d4a373]/20"
+          className="border-[#f0d0b0] focus:border-[#d4a373] focus:ring-[#d4a373]/20 h-10 md:h-auto"
         />
       </div>
 
@@ -159,11 +159,16 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
         />
       </div>
 
-      <DialogFooter className="mt-6">
-        <Button type="button" variant="outline" onClick={onClose} className="border-[#3d0d04] text-[#3d0d04]">
+      <DialogFooter className="mt-6 flex flex-col sm:flex-row gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClose}
+          className="border-[#3d0d04] text-[#3d0d04] w-full sm:w-auto"
+        >
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting} className="bg-[#3d0d04] hover:bg-[#571306]">
+        <Button type="submit" disabled={isSubmitting} className="bg-[#3d0d04] hover:bg-[#571306] w-full sm:w-auto">
           {isSubmitting ? "Enviando..." : "Enviar mensaje"}
         </Button>
       </DialogFooter>

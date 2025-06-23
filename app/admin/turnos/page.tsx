@@ -20,7 +20,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { EnviarRecordatorios } from "./enviar-recordatorios"
 
 // First, update the import statements at the top of the file
 // Replace:
@@ -605,11 +604,6 @@ export default function AdminTurnosPage() {
 
       {/* Modal para configurar horarios */}
       <ConfigurarHorarios open={configurarHorariosOpen} onOpenChange={setConfigurarHorariosOpen} />
-
-      {/* Sección para enviar recordatorios */}
-      <div className="mt-6">
-        <EnviarRecordatorios />
-      </div>
 
       {/* Diálogo para ver detalles del turno */}
       <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>

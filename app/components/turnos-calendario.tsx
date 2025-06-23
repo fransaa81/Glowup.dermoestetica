@@ -21,8 +21,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CalendarIcon, Clock, ChevronLeft, ChevronRight, Check, Loader2 } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
-import { enviarConfirmacionTurno } from "../actions/email-actions"
-import { programarRecordatorio } from "../actions/recordatorio-actions"
 
 export function TurnosCalendario() {
   const [date, setDate] = useState<Date | undefined>(undefined)
@@ -381,19 +379,13 @@ export function TurnosCalendario() {
       localStorage.setItem("turnosReservados", JSON.stringify(turnosActualizados))
       setTurnosReservados(turnosActualizados)
 
-      // Enviar correo de confirmación
-      const resultadoEmail = await enviarConfirmacionTurno(nuevoTurno)
-
-      // Programar recordatorio 24h antes
-      const resultadoRecordatorio = await programarRecordatorio(nuevoTurno)
-
       // Confirmar turno
       setTurnoConfirmado(true)
       setIsCalendarOpen(false)
 
       toast({
         title: "Turno confirmado",
-        description: "Tu turno ha sido reservado correctamente y se ha enviado un correo de confirmación.",
+        description: "Tu turno ha sido reservado correctamente.",
       })
     } catch (error) {
       console.error("Error al guardar turno:", error)
@@ -590,14 +582,14 @@ export function TurnosCalendario() {
         }}
       >
         <PopoverTrigger asChild>
-          <Button className="bg-[#3d0d04] hover:bg-[#571306] mb-4 px-8 py-2 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] flex items-center gap-2">
+          <Button className="bg-[#3d0d04] hover:bg-[#571306] mb-4 px-6 md:px-8 py-2 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] flex items-center gap-2 w-full md:w-auto justify-center">
             <CalendarIcon className="h-4 w-4" />
             Elegí tu turno
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="center">
           {step === 1 && (
-            <div className="p-4 w-[350px] md:w-[450px]">
+            <div className="p-3 md:p-4 w-[300px] sm:w-[350px] md:w-[450px]">
               <h3 className="text-center font-medium mb-4 text-[#3d0d04]">Selecciona fecha y horario</h3>
 
               <div className="space-y-4">
@@ -608,7 +600,7 @@ export function TurnosCalendario() {
           )}
 
           {step === 2 && date && selectedTime && (
-            <div className="p-4 w-[350px] md:w-[450px]">
+            <div className="p-3 md:p-4 w-[300px] sm:w-[350px] md:w-[450px]">
               <div className="flex items-center mb-4">
                 <Button variant="ghost" size="sm" onClick={() => setStep(1)} className="mr-2">
                   <ChevronLeft className="h-4 w-4 mr-1" />
@@ -636,7 +628,7 @@ export function TurnosCalendario() {
                     onChange={handleInputChange}
                     required
                     placeholder="Ingrese su nombre y apellido"
-                    className={`border-[#f0d0b0] focus:border-[#d4a373] ${
+                    className={`border-[#f0d0b0] focus:border-[#d4a373] h-10 ${
                       formErrors.nombreCompleto ? "border-red-300" : ""
                     }`}
                     aria-invalid={!!formErrors.nombreCompleto}
@@ -662,7 +654,7 @@ export function TurnosCalendario() {
                     placeholder="Ingrese su DNI (8 dígitos)"
                     inputMode="numeric"
                     maxLength={8}
-                    className={`border-[#f0d0b0] focus:border-[#d4a373] ${formErrors.dni ? "border-red-300" : ""}`}
+                    className={`border-[#f0d0b0] focus:border-[#d4a373] h-10 ${formErrors.dni ? "border-red-300" : ""}`}
                     aria-invalid={!!formErrors.dni}
                     aria-describedby={formErrors.dni ? "error-dni" : undefined}
                   />
@@ -686,7 +678,7 @@ export function TurnosCalendario() {
                       required
                       placeholder="dd/mm/aaaa"
                       maxLength={10}
-                      className={`border-[#f0d0b0] focus:border-[#d4a373] ${
+                      className={`border-[#f0d0b0] focus:border-[#d4a373] h-10 ${
                         formErrors.fechaNacimiento ? "border-red-300" : ""
                       }`}
                       aria-invalid={!!formErrors.fechaNacimiento}
@@ -717,7 +709,7 @@ export function TurnosCalendario() {
                     onChange={handleInputChange}
                     required
                     placeholder="Ingrese su email"
-                    className={`border-[#f0d0b0] focus:border-[#d4a373] ${formErrors.email ? "border-red-300" : ""}`}
+                    className={`border-[#f0d0b0] focus:border-[#d4a373] h-10 ${formErrors.email ? "border-red-300" : ""}`}
                     aria-invalid={!!formErrors.email}
                     aria-describedby={formErrors.email ? "error-email" : undefined}
                     autoComplete="email"
@@ -741,7 +733,7 @@ export function TurnosCalendario() {
                     required
                     placeholder="Ingrese su teléfono (solo números)"
                     inputMode="numeric"
-                    className={`border-[#f0d0b0] focus:border-[#d4a373] ${formErrors.telefono ? "border-red-300" : ""}`}
+                    className={`border-[#f0d0b0] focus:border-[#d4a373] h-10 ${formErrors.telefono ? "border-red-300" : ""}`}
                     aria-invalid={!!formErrors.telefono}
                     aria-describedby={formErrors.telefono ? "error-telefono" : undefined}
                     autoComplete="tel"
@@ -780,11 +772,11 @@ export function TurnosCalendario() {
       </Popover>
 
       {turnoConfirmado && (
-        <div className="text-center p-6 bg-gradient-to-br from-green-50 to-white rounded-lg border border-green-200 mt-4 shadow-lg max-w-md">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-            <Check className="h-8 w-8 text-green-600" />
+        <div className="text-center p-4 md:p-6 bg-gradient-to-br from-green-50 to-white rounded-lg border border-green-200 mt-4 shadow-lg max-w-md mx-auto">
+          <div className="w-14 h-14 md:w-16 md:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+            <Check className="h-6 w-6 md:h-8 md:w-8 text-green-600" />
           </div>
-          <p className="text-green-800 font-medium text-xl">¡Turno confirmado!</p>
+          <p className="text-green-800 font-medium text-lg md:text-xl">¡Turno confirmado!</p>
           <p className="text-sm text-green-700 mt-3">
             {formData.nombreCompleto}, tu turno para el {format(date!, "d 'de' MMMM", { locale: es })} de {selectedTime}{" "}
             ha sido reservado.
