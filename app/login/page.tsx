@@ -24,10 +24,10 @@ export default function LoginPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   // Verificar si ya está autenticado al cargar la página
-  useState(() => {
-    const auth = sessionStorage.getItem("authenticated") === "true"
-    setIsAuthenticated(auth)
-  })
+  useEffect(() => {
+  const auth = sessionStorage.getItem("authenticated") === "true";
+  setIsAuthenticated(auth);
+}, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
