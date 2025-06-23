@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import type React from "react"
 import Link from "next/link"
 import Image from "next/image"
@@ -12,10 +12,10 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
-import { ChevronLeft, Save, FileText } from "lucide-react"
+import { ChevronLeft, Save } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 
-// Interfaz para los datos del formulario
+// Interfaz para los datos del formulario (igual que en ficha-tecnica/page.tsx)
 interface FormData {
   // Información personal
   nombre: string
@@ -102,11 +102,12 @@ interface FormData {
   }
 }
 
-export default function FichaTecnicaPage() {
+export default function EditarFichaPage() {
   const router = useRouter()
+  const params = useParams()
   const { toast } = useToast()
   const [formData, setFormData] = useState<FormData>({
-    // Información personal
+    // Valores por defecto (igual que en ficha-tecnica/page.tsx)
     nombre: "",
     apellido: "",
     dni: "",
@@ -115,7 +116,6 @@ export default function FichaTecnicaPage() {
     celular: "",
     email: "",
 
-    // Datos clínicos
     cardiacas: "no-cardiacas",
     renales: "no-renales",
     circulatorias: "no-circulatorias",
@@ -135,7 +135,6 @@ export default function FichaTecnicaPage() {
     alcohol: "no-alcohol",
     embarazo: "no-embarazo",
 
-    // Piel
     biotipo: {
       normal: false,
       seca: false,
@@ -161,7 +160,6 @@ export default function FichaTecnicaPage() {
       fotoenvejecida: false,
     },
 
-    // Observaciones en el rostro
     lineasExpresion: {
       suaves: false,
       profundas: false,
@@ -174,12 +172,10 @@ export default function FichaTecnicaPage() {
       oleosa: false,
     },
 
-    // Diagnóstico y tratamiento
     diagnostico: "",
     presupuesto: "",
     aclaraciones: "",
 
-    // Sesiones programadas
     sesiones: {
       sesion1: "",
       sesion2: "",
@@ -190,14 +186,128 @@ export default function FichaTecnicaPage() {
       sesion7: "",
     },
   })
+  const [loading, setLoading] = useState(true)
+  const [originalFicha, setOriginalFicha] = useState<any>(null)
 
   useEffect(() => {
     // Verificar autenticación
     const isAuthenticated = sessionStorage.getItem("authenticated") === "true"
     if (!isAuthenticated) {
       router.push("/login")
+      return
     }
-  }, [router])
+
+    try {
+      // Cargar la ficha específica del localStorage
+      const fichasGuardadas = JSON.parse(localStorage.getItem("fichasCosmetologicas") || "[]")
+      const fichaEncontrada = fichasGuardadas.find((f: any) => f.id === params.id)
+
+      if (fichaEncontrada) {
+        setOriginalFicha(fichaEncontrada)
+
+        // Inicializar el formulario con los datos de la ficha
+        const fichaData: FormData = {
+          nombre: fichaEncontrada.nombre || "",
+          apellido: fichaEncontrada.apellido || "",
+          dni: fichaEncontrada.dni || "",
+          direccion: fichaEncontrada.direccion || "",
+          fechaNac: fichaEncontrada.fechaNac || "",
+          celular: fichaEncontrada.celular || "",
+          email: fichaEncontrada.email || "",
+
+          cardiacas: fichaEncontrada.cardiacas || "no-cardiacas",
+          renales: fichaEncontrada.renales || "no-renales",
+          circulatorias: fichaEncontrada.circulatorias || "no-circulatorias",
+          pulmonares: fichaEncontrada.pulmonares || "no-pulmonares",
+          digestivas: fichaEncontrada.digestivas || "no-digestivas",
+          hematologicas: fichaEncontrada.hematologicas || "no-hematologicas",
+          endocrinas: fichaEncontrada.endocrinas || "no-endocrinas",
+          neurologicas: fichaEncontrada.neurologicas || "no-neurologicas",
+          hipertension: fichaEncontrada.hipertension || "no-hipertension",
+          alergias: fichaEncontrada.alergias || "no-alergias",
+          piel: fichaEncontrada.piel || "no-piel",
+          queloides: fichaEncontrada.queloides || "no-queloides",
+          cicatrices: fichaEncontrada.cicatrices || "no-cicatrices",
+          quirurgicos: fichaEncontrada.quirurgicos || "no-quirurgicos",
+          convulsiones: fichaEncontrada.convulsiones || "no-convulsiones",
+          tabaco: fichaEncontrada.tabaco || "no-tabaco",
+          alcohol: fichaEncontrada.alcohol || "no-alcohol",
+          embarazo: fichaEncontrada.embarazo || "no-embarazo",
+
+          biotipo: {
+            normal: fichaEncontrada.biotipo?.normal || false,
+            seca: fichaEncontrada.biotipo?.seca || false,
+            mixta: fichaEncontrada.biotipo?.mixta || false,
+            grasa: fichaEncontrada.biotipo?.grasa || false,
+          },
+          fototipo: {
+            i: fichaEncontrada.fototipo?.i || false,
+            ii: fichaEncontrada.fototipo?.ii || false,
+            iii: fichaEncontrada.fototipo?.iii || false,
+            iv: fichaEncontrada.fototipo?.iv || false,
+          },
+          alteraciones: {
+            hipercromias: fichaEncontrada.alteraciones?.hipercromias || false,
+            rosacea: fichaEncontrada.alteraciones?.rosacea || false,
+            acne: fichaEncontrada.alteraciones?.acne || false,
+            noEncontradas: fichaEncontrada.alteraciones?.noEncontradas || false,
+          },
+          estadoPiel: {
+            deshidratada: fichaEncontrada.estadoPiel?.deshidratada || false,
+            atopica: fichaEncontrada.estadoPiel?.atopica || false,
+            sensible: fichaEncontrada.estadoPiel?.sensible || false,
+            fotoenvejecida: fichaEncontrada.estadoPiel?.fotoenvejecida || false,
+          },
+
+          lineasExpresion: {
+            suaves: fichaEncontrada.lineasExpresion?.suaves || false,
+            profundas: fichaEncontrada.lineasExpresion?.profundas || false,
+            arrugas: fichaEncontrada.lineasExpresion?.arrugas || false,
+            flaccidez: fichaEncontrada.lineasExpresion?.flaccidez || false,
+          },
+          textura: {
+            suave: fichaEncontrada.textura?.suave || false,
+            aspera: fichaEncontrada.textura?.aspera || false,
+            oleosa: fichaEncontrada.textura?.oleosa || false,
+          },
+
+          diagnostico: fichaEncontrada.diagnostico || "",
+          presupuesto: fichaEncontrada.presupuesto || "",
+          aclaraciones: fichaEncontrada.aclaraciones || "",
+
+          sesiones: {
+            sesion1: fichaEncontrada.sesiones?.sesion1 || "",
+            sesion2: fichaEncontrada.sesiones?.sesion2 || "",
+            sesion3: fichaEncontrada.sesiones?.sesion3 || "",
+            sesion4: fichaEncontrada.sesiones?.sesion4 || "",
+            sesion5: fichaEncontrada.sesiones?.sesion5 || "",
+            sesion6: fichaEncontrada.sesiones?.sesion6 || "",
+            sesion7: fichaEncontrada.sesiones?.sesion7 || "",
+          },
+        }
+
+        setFormData(fichaData)
+      } else {
+        // Si no se encuentra la ficha, redirigir a la lista
+        toast({
+          title: "Error",
+          description: "No se encontró la ficha solicitada",
+          variant: "destructive",
+        })
+        router.push("/fichas-guardadas")
+      }
+    } catch (error) {
+      console.error("Error al cargar ficha:", error)
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al cargar la ficha",
+        variant: "destructive",
+      })
+      router.push("/fichas-guardadas")
+    }
+
+    setLoading(false)
+  }, [router, params.id, toast])
 
   // Manejador para campos de texto e inputs
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -239,8 +349,7 @@ export default function FichaTecnicaPage() {
     }))
   }
 
-  // Modificar la función handleSubmit para asegurar que las fichas se guarden correctamente
-
+  // Función para guardar los cambios
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -255,12 +364,22 @@ export default function FichaTecnicaPage() {
     }
 
     try {
-      // Crear un ID único para la ficha basado en timestamp
-      const fichaId = Date.now().toString()
-
       // Obtener fichas existentes del localStorage
       const fichasGuardadas = JSON.parse(localStorage.getItem("fichasCosmetologicas") || "[]")
 
+      // Encontrar el índice de la ficha a actualizar
+      const fichaIndex = fichasGuardadas.findIndex((f: any) => f.id === params.id)
+
+      if (fichaIndex === -1) {
+        toast({
+          title: "Error al guardar",
+          description: "No se encontró la ficha para actualizar.",
+          variant: "destructive",
+        })
+        return
+      }
+
+      // Dentro de la función handleSubmit, antes de crear fichaActualizada
       // Convertir el presupuesto formateado a un valor numérico para almacenamiento
       let presupuestoNumerico = formData.presupuesto
       if (formData.presupuesto) {
@@ -268,50 +387,50 @@ export default function FichaTecnicaPage() {
         presupuestoNumerico = formData.presupuesto.replace(/\./g, "")
       }
 
-      // Agregar la nueva ficha
-      const nuevaFicha = {
-        id: fichaId,
+      // Actualizar la ficha
+      const fichaActualizada = {
+        ...originalFicha,
         ...formData,
         presupuesto: presupuestoNumerico, // Usar el valor numérico
         nombreCompleto: `${formData.apellido}, ${formData.nombre}`,
-        fechaCreacion: new Date().toISOString(),
+        fechaActualizacion: new Date().toISOString(),
       }
 
-      fichasGuardadas.push(nuevaFicha)
+      fichasGuardadas[fichaIndex] = fichaActualizada
 
       // Guardar en localStorage
       localStorage.setItem("fichasCosmetologicas", JSON.stringify(fichasGuardadas))
 
       toast({
-        title: "Ficha guardada",
-        description: "La ficha cosmetológica se ha guardado correctamente.",
+        title: "Ficha actualizada",
+        description: "La ficha cosmetológica se ha actualizado correctamente.",
       })
 
-      // Redirigir a la lista de fichas
-      router.push("/fichas-guardadas")
+      // Redirigir a la vista de la ficha
+      router.push(`/fichas-guardadas/${params.id}`)
     } catch (error) {
-      console.error("Error al guardar ficha:", error)
+      console.error("Error al actualizar ficha:", error)
       toast({
         title: "Error al guardar",
-        description: "Ocurrió un error al guardar la ficha. Por favor, intenta nuevamente.",
+        description: "Ocurrió un error al actualizar la ficha. Por favor, intenta nuevamente.",
         variant: "destructive",
       })
     }
   }
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("authenticated")
-    router.push("/login")
+  if (loading) {
+    return <div className="container py-10 text-center">Cargando...</div>
   }
 
+  // El resto del componente es similar a ficha-tecnica/page.tsx pero con título y botones diferentes
   return (
     <div className="container py-10">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
           <Button variant="ghost" asChild className="mr-4">
-            <Link href="/login">
+            <Link href={`/fichas-guardadas/${params.id}`}>
               <ChevronLeft className="mr-2 h-4 w-4" />
-              Volver
+              Volver a la ficha
             </Link>
           </Button>
           <div className="flex items-center gap-4">
@@ -322,21 +441,8 @@ export default function FichaTecnicaPage() {
               <div className="text-xl font-semibold text-[#8B4240]">Glow up</div>
               <div className="text-xs text-[#8B4240] tracking-wide">Estética Cosmiátrica</div>
             </div>
-            <h1 className="text-3xl font-bold text-[#8B4240] ml-2">Ficha Técnica</h1>
+            <h1 className="text-3xl font-bold text-[#8B4240] ml-2">Editar Ficha</h1>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            className="text-[#8B4240] border-[#8B4240]"
-            onClick={() => router.push("/fichas-guardadas")}
-          >
-            <FileText className="mr-2 h-4 w-4" />
-            Acceder a fichas
-          </Button>
-          <Button variant="outline" onClick={handleLogout} className="text-[#8B4240] border-[#8B4240]">
-            Cerrar sesión
-          </Button>
         </div>
       </div>
 
@@ -344,8 +450,8 @@ export default function FichaTecnicaPage() {
         <CardHeader className="bg-[#FBE8E0]/30">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-3xl text-[#8B4240]">Ficha Cosmetológica</CardTitle>
-              <CardDescription>Completa la información del cliente para su historial y seguimiento</CardDescription>
+              <CardTitle className="text-3xl text-[#8B4240]">Editar Ficha Cosmetológica</CardTitle>
+              <CardDescription>Modifica la información del cliente para actualizar su historial</CardDescription>
             </div>
             <div className="text-right">
               <div className="flex items-center gap-2">
@@ -1196,30 +1302,16 @@ export default function FichaTecnicaPage() {
                   ))}
                 </div>
               </div>
-
-              <div className="border-t pt-6">
-                <div className="flex flex-col md:flex-row justify-between gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firma">Aceptación/Firma</Label>
-                    <div className="border rounded-md h-24 w-full md:w-96"></div>
-                  </div>
-
-                  <div className="text-right self-end">
-                    <p className="text-sm text-muted-foreground">Carina Sánchez -</p>
-                    <p className="text-sm text-muted-foreground">Técnica Universitaria Cosmiatra y Esteticista</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-between bg-[#FBE8E0]/30">
           <Button variant="outline" asChild>
-            <Link href="/">Cancelar</Link>
+            <Link href={`/fichas-guardadas/${params.id}`}>Cancelar</Link>
           </Button>
           <Button type="submit" onClick={handleSubmit} className="bg-[#8B4240] hover:bg-[#7A3A38]">
             <Save className="mr-2 h-4 w-4" />
-            Guardar Ficha
+            Guardar Cambios
           </Button>
         </CardFooter>
       </Card>

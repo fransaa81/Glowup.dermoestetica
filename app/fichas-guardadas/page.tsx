@@ -126,7 +126,7 @@ export default function FichasGuardadasPage() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
           <Button variant="ghost" asChild className="mr-4">
-            <Link href="/ficha-tecnica">
+            <Link href="/login">
               <ChevronLeft className="mr-2 h-4 w-4" />
               Volver
             </Link>
@@ -137,9 +137,9 @@ export default function FichasGuardadasPage() {
             </div>
             <div>
               <div className="text-xl font-semibold text-[#8B4240]">Glow up</div>
-              <div className="text-xs text-[#8B4240]">"Centro de Estética"</div>
+              <div className="text-xs text-[#8B4240] tracking-wide">Estética Cosmiátrica</div>
             </div>
-            <h1 className="text-2xl font-bold text-[#8B4240] ml-2">Fichas Guardadas</h1>
+            <h1 className="text-3xl font-bold text-[#8B4240] ml-2">Fichas Guardadas</h1>
           </div>
         </div>
         <Button className="bg-[#8B4240] hover:bg-[#7A3A38]" onClick={() => router.push("/ficha-tecnica")}>
@@ -152,7 +152,7 @@ export default function FichasGuardadasPage() {
         <CardHeader className="bg-[#FBE8E0]/30">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <CardTitle className="text-2xl text-[#8B4240]">Fichas Cosmetológicas</CardTitle>
+              <CardTitle className="text-3xl text-[#8B4240]">Fichas Cosmetológicas</CardTitle>
               <CardDescription>Listado de todas las fichas guardadas</CardDescription>
             </div>
             <div className="relative w-full md:w-64">

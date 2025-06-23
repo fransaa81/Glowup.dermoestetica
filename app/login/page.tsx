@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChevronLeft, Eye, EyeOff, AlertCircle, FileText } from "lucide-react"
+import { ChevronLeft, Eye, EyeOff, AlertCircle, FileText, Calendar, MessageSquare } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function LoginPage() {
@@ -23,13 +23,11 @@ export default function LoginPage() {
   const [showHint, setShowHint] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  // ✅ Solo este bloque debe quedar
-  useEffect(() => {
-    const auth =
-      typeof window !== "undefined" &&
-      sessionStorage.getItem("authenticated") === "true";
-    setIsAuthenticated(auth);
-  }, []);
+  // Verificar si ya está autenticado al cargar la página
+  useState(() => {
+    const auth = sessionStorage.getItem("authenticated") === "true"
+    setIsAuthenticated(auth)
+  })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -76,7 +74,9 @@ export default function LoginPage() {
       <div className="flex justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center text-[#8B4240]">Acceso a Ficha Cosmetológica</CardTitle>
+            <CardTitle className="text-3xl text-center text-[#8B4240] tracking-wide">
+              Acceso a Ficha Cosmetológica
+            </CardTitle>
             <CardDescription className="text-center">
               Ingresa tus credenciales para acceder a la ficha cosmetológica
             </CardDescription>
@@ -122,6 +122,24 @@ export default function LoginPage() {
                   >
                     <FileText className="mr-2 h-4 w-4" />
                     Acceder a fichas guardadas
+                  </Button>
+
+                  <Button
+                    onClick={() => router.push("/admin/turnos")}
+                    variant="outline"
+                    className="w-full border-[#8B4240] text-[#8B4240]"
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Administrar turnos
+                  </Button>
+
+                  <Button
+                    onClick={() => router.push("/admin/consultas")}
+                    variant="outline"
+                    className="w-full border-[#8B4240] text-[#8B4240]"
+                  >
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Consultas
                   </Button>
 
                   <Button

@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, Printer, FileDown } from "lucide-react"
+import { ChevronLeft, Printer, FileDown, Edit } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import html2canvas from "html2canvas"
@@ -230,6 +230,17 @@ export default function FichaIndividualPage() {
               font-size: 13px;
               color: #666;
             }
+            .signature-container {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+            }
+            .professional-container {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              text-align: right;
+            }
             .checkbox-item {
               display: flex;
               align-items: center;
@@ -293,66 +304,70 @@ export default function FichaIndividualPage() {
   const handleExportPDF = async () => {
     if (!fichaRef.current) return
 
-    // Crear un estilo temporal para la impresión
-    const style = document.createElement("style")
-    style.innerHTML = `
-      @media print {
-        .pdf-container * {
-          font-size: 11px !important;
+    try {
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      })
+
+      // Capture the content with better quality and scale
+      const canvas = await html2canvas(fichaRef.current, {
+        scale: 1.5, // Increased scale for better quality
+        useCORS: true,
+        logging: false,
+        windowWidth: 1000, // Fixed width to ensure consistent rendering
+        windowHeight: 1414, // A4 proportion
+      })
+
+      // Calculate dimensions to fit A4 page
+      const imgData = canvas.toDataURL("image/jpeg", 0.95)
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const pageHeight = pdf.internal.pageSize.getHeight()
+      const margin = 10 // mm
+
+      // Calculate image dimensions to fit within page margins
+      const imgWidth = pageWidth - margin * 2
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+      // If content is taller than a single page, split it across multiple pages
+      if (imgHeight > pageHeight - margin * 2) {
+        // Calculate how many pages we need
+        const pageCount = Math.ceil(imgHeight / (pageHeight - margin * 2))
+
+        // For each page
+        for (let i = 0; i < pageCount; i++) {
+          if (i > 0) {
+            pdf.addPage()
+          }
+
+          // Calculate which portion of the image to use for this page
+          const sourceY = (i * canvas.height) / pageCount
+          const sourceHeight = canvas.height / pageCount
+
+          // Add this portion to the PDF
+          pdf.addImage(
+            imgData,
+            "JPEG",
+            margin,
+            margin,
+            imgWidth,
+            imgHeight / pageCount,
+            "",
+            "FAST",
+            (i * -imgHeight) / pageCount,
+          )
         }
-        .pdf-container h3 {
-          font-size: 14px !important;
-        }
-        .pdf-container .section {
-          margin-bottom: 10px !important;
-          padding-bottom: 10px !important;
-        }
-        .pdf-container .space-y-6 > div {
-          margin-bottom: 10px !important;
-        }
-        .pdf-container .grid {
-          gap: 8px !important;
-        }
-        .pdf-container .mb-4 {
-          margin-bottom: 8px !important;
-        }
-        .pdf-container .p-8 {
-          padding: 16px !important;
-        }
+      } else {
+        // If content fits on a single page
+        pdf.addImage(imgData, "JPEG", margin, margin, imgWidth, imgHeight)
       }
-    `
-    document.head.appendChild(style)
 
-    // Agregar temporalmente la clase para el PDF
-    fichaRef.current.classList.add("pdf-container")
-
-    const canvas = await html2canvas(fichaRef.current, {
-      scale: 2,
-      logging: false,
-      useCORS: true,
-      windowHeight: fichaRef.current.scrollHeight,
-      windowWidth: fichaRef.current.scrollWidth,
-    })
-
-    // Limpiar después de la captura
-    fichaRef.current.classList.remove("pdf-container")
-    document.head.removeChild(style)
-
-    const imgData = canvas.toDataURL("image/png")
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    })
-
-    // Calcular dimensiones para ajustar a página A4
-    const imgWidth = 210 // Ancho A4 en mm
-    const pageHeight = 297 // Alto A4 en mm
-    const imgHeight = (canvas.height * imgWidth) / canvas.width
-
-    // Agregar imagen al PDF con escala adecuada
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, Math.min(imgHeight, pageHeight))
-    pdf.save(`Ficha_${ficha?.nombreCompleto.replace(/\s/g, "_")}.pdf`)
+      pdf.save(`Ficha_${ficha?.nombreCompleto.replace(/\s/g, "_")}.pdf`)
+    } catch (error) {
+      console.error("Error al exportar a PDF:", error)
+      alert("Hubo un error al exportar el PDF. Por favor, inténtelo de nuevo.")
+    }
   }
 
   // Función auxiliar para mostrar valores booleanos como "Sí" o "No"
@@ -400,12 +415,20 @@ export default function FichaIndividualPage() {
             </div>
             <div>
               <div className="text-xl font-semibold text-[#8B4240]">Glow up</div>
-              <div className="text-xs text-[#8B4240]">"Centro de Estética"</div>
+              <div className="text-xs text-[#8B4240] tracking-wide">Estética Cosmiátrica</div>
             </div>
-            <h1 className="text-2xl font-bold text-[#8B4240] ml-2">Ficha de {ficha.nombreCompleto}</h1>
+            <h1 className="text-3xl font-bold text-[#8B4240] ml-2">Ficha de {ficha.nombreCompleto}</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/editar-ficha/${ficha.id}`)}
+            className="text-[#8B4240] border-[#8B4240]"
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            Editar
+          </Button>
           <Button variant="outline" onClick={handlePrint} className="text-[#8B4240] border-[#8B4240]">
             <Printer className="mr-2 h-4 w-4" />
             Imprimir
@@ -426,11 +449,11 @@ export default function FichaIndividualPage() {
             </div>
             <div>
               <div className="logo-text text-xl font-semibold text-[#8B4240]">Glow up</div>
-              <div className="logo-subtext text-xs text-[#8B4240]">"Centro de Estética"</div>
+              <div className="logo-subtext text-xs text-[#8B4240] tracking-wide">Estética Cosmiátrica</div>
             </div>
           </div>
           <div className="text-right">
-            <h2 className="title text-xl font-bold text-[#8B4240]">Ficha Cosmetológica</h2>
+            <h2 className="title text-2xl font-bold text-[#8B4240]">Ficha Cosmetológica</h2>
             <p className="subtitle text-sm text-muted-foreground">
               Fecha de creación: {format(new Date(ficha.fechaCreacion), "dd/MM/yyyy", { locale: es })}
             </p>
@@ -440,7 +463,7 @@ export default function FichaIndividualPage() {
         <div className="space-y-6">
           {/* Sección: Información Personal */}
           <div className="section border-b pb-4">
-            <h3 className="section-title text-lg font-semibold mb-3 text-[#8B4240]">Información Personal</h3>
+            <h3 className="section-title text-xl font-semibold mb-3 text-[#8B4240]">Información Personal</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="field-label text-sm text-muted-foreground">Nombre:</p>
@@ -475,7 +498,7 @@ export default function FichaIndividualPage() {
 
           {/* Sección: Datos Clínicos */}
           <div className="section border-b pb-4">
-            <h3 className="section-title text-lg font-semibold mb-3 text-[#8B4240]">Datos Clínicos</h3>
+            <h3 className="section-title text-xl font-semibold mb-3 text-[#8B4240]">Datos Clínicos</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {ficha.cardiacas === "si-cardiacas" && <div className="field-value font-medium">Enf. Cardíacas</div>}
               {ficha.renales === "si-renales" && <div className="field-value font-medium">Enf. Renales</div>}
@@ -510,7 +533,7 @@ export default function FichaIndividualPage() {
 
           {/* Sección: Piel */}
           <div className="section border-b pb-4">
-            <h3 className="section-title text-lg font-semibold mb-3 text-[#8B4240]">Piel</h3>
+            <h3 className="section-title text-xl font-semibold mb-3 text-[#8B4240]">Piel</h3>
 
             <div className="mb-4">
               <p className="field-label text-sm text-muted-foreground font-medium mb-2">Biotipo cutáneo:</p>
@@ -555,7 +578,7 @@ export default function FichaIndividualPage() {
 
           {/* Sección: Observaciones en el rostro */}
           <div className="section border-b pb-4">
-            <h3 className="section-title text-lg font-semibold mb-3 text-[#8B4240]">Observaciones en el rostro</h3>
+            <h3 className="section-title text-xl font-semibold mb-3 text-[#8B4240]">Observaciones en el rostro</h3>
 
             <div className="mb-4">
               <p className="field-label text-sm text-muted-foreground font-medium mb-2">Líneas de expresión:</p>
@@ -579,7 +602,7 @@ export default function FichaIndividualPage() {
 
           {/* Sección: Diagnóstico y tratamiento */}
           <div className="section border-b pb-4">
-            <h3 className="section-title text-lg font-semibold mb-3 text-[#8B4240]">Diagnóstico y tratamiento</h3>
+            <h3 className="section-title text-xl font-semibold mb-3 text-[#8B4240]">Diagnóstico y Tratamiento</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <p className="field-label text-sm text-muted-foreground mb-1">Diagnóstico y tratamiento recomendado:</p>
@@ -592,7 +615,10 @@ export default function FichaIndividualPage() {
                   <p className="field-label text-sm text-muted-foreground mb-1">Presupuesto:</p>
                   <p className="field-value font-medium p-2 border rounded-md bg-gray-50">
                     {ficha.presupuesto
-                      ? `$ ${Number(ficha.presupuesto).toLocaleString("es-AR")} ARS`
+                      ? `$ ${Number.parseFloat(ficha.presupuesto).toLocaleString("es-AR", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        })} ARS`
                       : "No especificado"}
                   </p>
                 </div>
@@ -608,7 +634,7 @@ export default function FichaIndividualPage() {
 
           {/* Sección: Sesiones Programadas */}
           <div className="section border-b pb-4">
-            <h3 className="section-title text-lg font-semibold mb-3 text-[#8B4240]">Sesiones Programadas</h3>
+            <h3 className="section-title text-xl font-semibold mb-3 text-[#8B4240]">Sesiones Programadas</h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {[1, 2, 3, 4, 5, 6, 7].map((session) => (
                 <div key={session}>
@@ -624,13 +650,15 @@ export default function FichaIndividualPage() {
           {/* Sección: Firma */}
           <div className="footer border-t pt-4 mt-8">
             <div className="flex justify-between">
-              <div>
+              <div className="signature-container">
                 <p className="text-sm text-muted-foreground">Firma del cliente:</p>
                 <div className="signature-line border-b w-full md:w-96 h-10 mt-2"></div>
               </div>
-              <div className="professional-info text-right">
-                <p className="text-sm text-muted-foreground">Carina Sánchez -</p>
-                <p className="text-sm text-muted-foreground">Técnica Universitaria Cosmiatra y Esteticista</p>
+              <div className="professional-container">
+                <p className="text-sm text-muted-foreground text-right">Carina Sánchez -</p>
+                <p className="text-sm text-muted-foreground tracking-wide text-right">
+                  Técnica Universitaria Cosmiatra y Esteticista
+                </p>
               </div>
             </div>
           </div>
